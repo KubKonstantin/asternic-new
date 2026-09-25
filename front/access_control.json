@@ -1,0 +1,24 @@
+{
+  "auth_provider": "casdoor",
+  "queue_permissions": {
+    "kkubeev": ["*"],
+    "drybushkin": ["*"],
+    "lantropov": ["*"],
+    "ivinogradov": ["managers", "customers"],
+    "admin": ["*"],
+    "tkamenev": ["sales"],
+    "mkulagina": ["sales"],
+    "vkvaskov": ["vipma"],
+    "asoloviev": ["businessdev"],
+    "vkarpakova": ["vipma"],
+    "nvyazikova": ["vipma"],
+    "rkondrakov": ["hybrid"],
+    "ribatulin": ["common"]
+  },
+  "internal_users": {
+    "admin": "$2y$10$AV.elktoxe5iXnM9J/z0/emdKrN.jtfo.NkWkKR3fBCWya8Dpx5tm",
+    "abudko": "$2y$10$vcSJINXuLlfn.6Ei/IjwMOr5qeJpPndyP.XYbtJ1/VEigqUp3yJMO",
+    "rkondrakov": "$2y$10$HqwU5BuKuclcKvvadoBj0./rpeJdduFj5PldlJAcfkwg8FMyrWhRu",
+    "ribatulin": "$2y$10$EzG41fXpnyJKU/oxjB/lHeVlJSZ97jlsNfaUzlLSG2ShIivjligqm"
+  }
+}
