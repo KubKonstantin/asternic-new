@@ -112,9 +112,23 @@ function checkRecording($uniqueid_without_dot, $queue, $cnum, $dst) {
         if ($result && isset($result['status'])) {
             if ($result['status'] == 'success') {
                 if (!empty($result['files'])) {
+					$file_info = $result['files'][0];
+					if (is_string($file_info)) {
+						$file_info = array('original_filename' => basename($file_info));
+					} elseif (is_array($file_info) && empty($file_info['original_filename'])) {
+						foreach (array('filename', 'name', 'record_file') as $filename_key) {
+							if (!empty($file_info[$filename_key])) {
+								$file_info['original_filename'] = basename($file_info[$filename_key]);
+								break;
+							}
+						}
+					}
+					if (empty($file_info['original_filename'])) {
+						return array('success' => false, 'error' => 'Сервис записей не вернул имя файла');
+					}
                     return array(
                         'success' => true,
-                        'file_info' => $result['files'][0],
+                        'file_info' => $file_info,
                         'queue' => $queue
                     );
                 } else {
@@ -370,6 +384,10 @@ function restoreButtonsFromCache() {
             const cachedData = localStorage.getItem(`record_${uniqueid}`);
             if (cachedData) {
                 const data = JSON.parse(cachedData);
+                if (!data.original_filename || !data.queue) {
+                    localStorage.removeItem(`record_${uniqueid}`);
+                    return;
+                }
                 // Заменяем кнопку "Проверить" на "Воспроизвести"
                 $cell.html(`
                     <button class="play-btn" 

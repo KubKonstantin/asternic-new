@@ -31,6 +31,22 @@ function no_queue_recording_api($path, $payload, $timeout) {
 	return ['success' => true, 'result' => $result];
 }
 
+function no_queue_recording_filename($file_info) {
+	if (is_string($file_info)) {
+		return basename(trim($file_info));
+	}
+	if (!is_array($file_info)) {
+		return '';
+	}
+
+	foreach (['original_filename', 'filename', 'name', 'record_file'] as $key) {
+		if (isset($file_info[$key]) && is_string($file_info[$key]) && trim($file_info[$key]) !== '') {
+			return basename(trim($file_info[$key]));
+		}
+	}
+	return '';
+}
+
 function no_queue_find_recording($group, $call) {
 	$callid = explode('.', (string)$call['uniqueid'])[0];
 	$agent = (string)$call['cnum'];
@@ -117,9 +133,14 @@ function no_queue_handle_recording_action($connection, $allowed_queues, $directi
 			no_queue_json_response($recording, 404);
 		}
 
+		$filename = no_queue_recording_filename($recording['file_info']);
+		if ($filename === '') {
+			no_queue_json_response(['success' => false, 'error' => 'Сервис записей не вернул имя файла'], 502);
+		}
+
 		$token = bin2hex(random_bytes(16));
 		$_SESSION['NO_QUEUE_RECORDINGS'][$token] = [
-			'filename' => basename((string)$recording['file_info']['original_filename']),
+			'filename' => $filename,
 			'group' => $group,
 			'created_at' => time()
 		];
